@@ -3,6 +3,7 @@
     xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.0">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"
         schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    <!-- Attribute Classes -->
     <xs:attributeGroup name="id">
         <xs:attribute name="id" type="xs:ID" use="optional"/>
     </xs:attributeGroup>
@@ -27,6 +28,7 @@
         <xs:attribute name="type" type="xs:string" use="optional"/>
     </xs:attributeGroup>
     
+    <!-- Element Entities (This is located below the Elements section in the RNG, but is higher in the XSD for readability.) -->
     <xs:group name="entity.auxInfo">
         <xs:choice>
           <xs:element ref="admin"/>
@@ -85,6 +87,7 @@
         </xs:sequence>
     </xs:complexType>
     
+    <!-- Elements -->
     <xs:element name="admin">
         <xs:complexType>
             <xs:complexContent mixed="true">
