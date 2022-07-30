@@ -66,36 +66,12 @@
         </xs:choice>
     </xs:group>
     
-    <xs:complexType name="entity.auxInfo">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="entity.auxInfo"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="entity.noteLinkInfo">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="entity.noteLinkInfo"></xs:group>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="entity.noteText" mixed="true">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="entity.noteText"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="entity.basicText" mixed="true">
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="entity.basicText"/>
-        </xs:sequence>
-    </xs:complexType>
-    
     <!-- Elements -->
     <xs:element name="admin">
-        <xs:complexType>
-            <xs:complexContent mixed="true">
-                <xs:extension base="entity.noteText">
-                    <xs:attributeGroup ref="IDLangTgtDtyp"/>
-                    <xs:attribute name="type" type="xs:string" use="required"/>
-                </xs:extension>
-            </xs:complexContent>
+        <xs:complexType mixed="true">
+            <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:attributeGroup ref="IDLangTgtDtyp"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="adminGrp">
@@ -148,7 +124,7 @@
                 <xs:group ref="entity.auxInfo" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element ref="langSec" minOccurs="1" maxOccurs="unbounded"/>
             </xs:sequence>
-            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="date">
@@ -161,13 +137,10 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="descrip">
-        <xs:complexType>
-            <xs:complexContent mixed="true">
-                <xs:extension base="entity.noteText">
-                    <xs:attributeGroup ref="IDLangTgtDtyp"/>
-                    <xs:attribute name="type" type="xs:string" use="required"/>
-                </xs:extension>
-            </xs:complexContent>
+        <xs:complexType mixed="true">
+            <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:attributeGroup ref="IDLangTgtDtyp"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="descripGrp">
@@ -237,16 +210,13 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="foreign">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="entity.noteText">
-                    <xs:attributeGroup ref="idlang"/>
-                </xs:extension>
-            </xs:complexContent>
+        <xs:complexType mixed="true">
+            <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:attributeGroup ref="idlang"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="hi">
-        <xs:complexType>
+        <xs:complexType mixed="true">
             <xs:attributeGroup ref="target-IDREF"/>
             <xs:attribute name="type" use="optional">
                 <xs:simpleType>
@@ -265,11 +235,8 @@
     </xs:element>
     <xs:element name="item">
         <xs:complexType mixed="true">
-            <xs:complexContent>
-                <xs:extension base="entity.noteText">
-                    <xs:attributeGroup ref="idtype"/>
-                </xs:extension>
-            </xs:complexContent>
+            <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:attributeGroup ref="idtype"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="itemGrp">
@@ -301,21 +268,15 @@
     </xs:element>
     <xs:element name="note">
         <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="entity.noteText">
-                    <xs:attributeGroup ref="idlang"/>
-                </xs:extension>
-            </xs:complexContent>
+            <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:attributeGroup ref="idlang"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="p">
         <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="entity.noteText">
-                    <xs:attributeGroup ref="idlang"/>
-                    <xs:attribute name="type" type="xs:string" use="optional"/>
-                </xs:extension>
-            </xs:complexContent>
+            <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:attributeGroup ref="idlang"/>
+            <xs:attribute name="type" type="xs:string" use="optional"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="ph">
@@ -375,6 +336,18 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute name="type" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="fmt"/>
+                        <xs:enumeration value="ui"/>
+                        <xs:enumeration value="quote"/>
+                        <xs:enumeration value="link"/>
+                        <xs:enumeration value="image"/>
+                        <xs:enumeration value="other"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="subtype" type="xs:string" use="optional"/>
             <xs:attribute name="target" type="xs:string" use="optional"/>
 <!--            <xs:assert test="if (exists(@id)) then if (@isolated='no' or not(exists(@isolated))) then true() else false() else if (@isolated='yes') then true() else false()"/>-->
@@ -383,7 +356,7 @@
     <xs:element name="sourceDesc">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="p" maxOccurs="unbounded" minOccurs="1"/>
+                <xs:element ref="p" minOccurs="1" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attributeGroup ref="idlang"/>
         </xs:complexType>
@@ -424,21 +397,15 @@
     </xs:element>
     <xs:element name="term">
         <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="entity.basicText">
-                    <xs:attributeGroup ref="id"/>
-                </xs:extension>
-            </xs:complexContent>
+            <xs:group ref="entity.basicText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:attributeGroup ref="id"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="termNote">
         <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="entity.noteText">
-                    <xs:attributeGroup ref="IDLangTgtDtyp"/>
-                    <xs:attribute name="type" type="xs:string" use="required"/>
-                </xs:extension>
-            </xs:complexContent>
+            <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:attributeGroup ref="IDLangTgtDtyp"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="termNoteGrp">
@@ -499,6 +466,7 @@
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:element ref="date"/>
                     <xs:element ref="note"/>
+                    <xs:element ref="ref"/>
                     <xs:element ref="xref"/>
                     <xs:element ref="transacNote"/>
                 </xs:choice>
