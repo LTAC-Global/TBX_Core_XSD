@@ -267,13 +267,13 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="note">
-        <xs:complexType>
+        <xs:complexType mixed="true">
             <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
             <xs:attributeGroup ref="idlang"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="p">
-        <xs:complexType>
+        <xs:complexType mixed="true">
             <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
             <xs:attributeGroup ref="idlang"/>
             <xs:attribute name="type" type="xs:string" use="optional"/>
@@ -396,13 +396,13 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="term">
-        <xs:complexType>
+        <xs:complexType mixed="true">
             <xs:group ref="entity.basicText" minOccurs="0" maxOccurs="unbounded"/>
             <xs:attributeGroup ref="id"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="termNote">
-        <xs:complexType>
+        <xs:complexType mixed="true">
             <xs:group ref="entity.noteText" minOccurs="0" maxOccurs="unbounded"/>
             <xs:attributeGroup ref="IDLangTgtDtyp"/>
             <xs:attribute name="type" type="xs:string" use="required"/>
