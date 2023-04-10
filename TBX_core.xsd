@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns="urn:iso:std:iso:30042:ed-2" targetNamespace="urn:iso:std:iso:30042:ed-2"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns="urn:iso:std:iso:30042:ed-2" targetNamespace="urn:iso:std:iso:30042:ed-2"
     xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.0">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace"
         schemaLocation="http://www.w3.org/2001/xml.xsd"/>
@@ -8,10 +9,10 @@
         <xs:attribute name="id" type="xs:ID" use="optional"/>
     </xs:attributeGroup>
     <xs:attributeGroup name="lang">
-        <xs:attribute name="lang" type="xs:language" use="optional"/>
+        <xs:attribute ref="xml:lang" use="optional"/>
     </xs:attributeGroup>
     <xs:attributeGroup name="idlang">
-        <xs:attributeGroup  ref="id"/>
+        <xs:attributeGroup ref="id"/>
         <xs:attributeGroup ref="lang"/>
     </xs:attributeGroup>
     <xs:attributeGroup name="target-IDREF">
@@ -27,28 +28,34 @@
         <xs:attributeGroup ref="id"/>
         <xs:attribute name="type" type="xs:string" use="optional"/>
     </xs:attributeGroup>
-    
+
     <!-- Element Entities (This is located below the Elements section in the RNG, but is higher in the XSD for readability.) -->
     <xs:group name="entity.auxInfo">
         <xs:choice>
-          <xs:element ref="admin"/>
-          <xs:element ref="adminGrp"/>
-          <xs:element ref="descrip"/>
-          <xs:element ref="descripGrp"/>
-          <xs:element ref="note"/>
-          <xs:element ref="ref"/>
-          <xs:element ref="transacGrp"/>
-          <xs:element ref="xref"/>
+            <xs:element ref="adminGrp"/>
+            <xs:element ref="descripGrp"/>
+            <xs:element ref="note"/>
+            <xs:element ref="transacGrp"/>
+            <xs:choice>
+                <xs:element ref="admin"/>
+                <xs:element ref="descrip"/>
+                <xs:element ref="ref"/>
+                <xs:element ref="xref"/>
+                <xs:any processContents="skip" namespace="##other"/>
+            </xs:choice>
         </xs:choice>
     </xs:group>
     <xs:group name="entity.noteLinkInfo">
         <xs:choice>
-            <xs:element ref="admin"/>
             <xs:element ref="adminGrp"/>
             <xs:element ref="note"/>
-            <xs:element ref="ref"/>
             <xs:element ref="transacGrp"/>
-            <xs:element ref="xref"/>
+            <xs:choice>
+                <xs:element ref="admin"/>
+                <xs:element ref="ref"/>
+                <xs:element ref="xref"/>
+                <xs:any processContents="skip" namespace="##other"/>
+            </xs:choice>
         </xs:choice>
     </xs:group>
     <xs:group name="entity.noteText">
@@ -65,7 +72,7 @@
             <xs:element ref="hi"/>
         </xs:choice>
     </xs:group>
-    
+
     <!-- Elements -->
     <xs:element name="admin">
         <xs:complexType mixed="true">
@@ -77,12 +84,18 @@
     <xs:element name="adminGrp">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="admin" minOccurs="1" maxOccurs="1"/>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                    <xs:element ref="admin"/>
+                    <xs:any processContents="skip" namespace="##other"/>
+                </xs:choice>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element ref="adminNote"/>
+                    <xs:choice>
+                        <xs:element ref="adminNote"/>
+                        <xs:element ref="ref"/>
+                        <xs:element ref="xref"/>
+                        <xs:any processContents="skip" namespace="##other"/>
+                    </xs:choice>
                     <xs:element ref="note"/>
-                    <xs:element ref="ref"/>
-                    <xs:element ref="xref"/>
                 </xs:choice>
             </xs:sequence>
             <xs:attributeGroup ref="id"/>
@@ -128,13 +141,16 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="date">
-        <xs:complexType>
-            <xs:simpleContent>
-                <xs:extension base="xs:date">
-                    <xs:attributeGroup ref="id"/>    
-                </xs:extension>
-            </xs:simpleContent>
-        </xs:complexType>
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:pattern value="\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2})?">
+                    <xs:annotation>
+                        <xs:documentation>Must conform to either "xs:date" or "xs:dateTime"
+                            datatypes.</xs:documentation>
+                    </xs:annotation>
+                </xs:pattern>
+            </xs:restriction>
+        </xs:simpleType>
     </xs:element>
     <xs:element name="descrip">
         <xs:complexType mixed="true">
@@ -146,15 +162,21 @@
     <xs:element name="descripGrp">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="descrip" minOccurs="1" maxOccurs="1"/>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                    <xs:element ref="descrip"/>
+                    <xs:any processContents="skip" namespace="##other"/>
+                </xs:choice>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element ref="admin"/>
                     <xs:element ref="adminGrp"/>
-                    <xs:element ref="descripNote"/>
                     <xs:element ref="note"/>
-                    <xs:element ref="ref"/>
                     <xs:element ref="transacGrp"/>
-                    <xs:element ref="xref"/>
+                    <xs:choice>
+                        <xs:element ref="admin"/>
+                        <xs:element ref="descripNote"/>
+                        <xs:element ref="ref"/>
+                        <xs:element ref="xref"/>
+                        <xs:any processContents="skip" namespace="##other"/>
+                    </xs:choice>
                 </xs:choice>
             </xs:sequence>
             <xs:attributeGroup ref="id"/>
@@ -169,9 +191,16 @@
     <xs:element name="ec">
         <xs:complexType>
             <xs:attribute name="startRef" type="xs:IDREF" use="optional"/>
-            <xs:attribute name="isolated" use="optional"/>
-            <xs:attribute name="disp" type="xs:string" use="optional"/>
-            <xs:attribute name="equiv" type="xs:string" use="optional"/>
+            <xs:attribute name="isolated" use="optional">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="yes"/>
+                        <xs:enumeration value="no"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="disp" use="optional"/>
+            <xs:attribute name="equiv" use="optional"/>
             <xs:attribute name="id" type="xs:ID" use="optional"/>
             <xs:attribute name="type" use="optional">
                 <xs:simpleType>
@@ -185,10 +214,10 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="subtype" type="xs:string" use="optional"/>
-            <xs:attribute name="target" type="xs:string" use="optional"/>
+            <xs:attribute name="subtype" use="optional"/>
+            <xs:attribute name="target" use="optional"/>
             <!--<xs:assert test="if (exists(@startRef)) then if (@isolated='no' or not(exists(@isolated))) then true() else false() else if (@isolated='yes') then true() else false()"/>-->
-            
+
         </xs:complexType>
     </xs:element>
     <xs:element name="encodingDesc">
@@ -350,7 +379,7 @@
             </xs:attribute>
             <xs:attribute name="subtype" type="xs:string" use="optional"/>
             <xs:attribute name="target" type="xs:string" use="optional"/>
-<!--            <xs:assert test="if (exists(@id)) then if (@isolated='no' or not(exists(@isolated))) then true() else false() else if (@isolated='yes') then true() else false()"/>-->
+            <!--            <xs:assert test="if (exists(@id)) then if (@isolated='no' or not(exists(@isolated))) then true() else false() else if (@isolated='yes') then true() else false()"/>-->
         </xs:complexType>
     </xs:element>
     <xs:element name="sourceDesc">
@@ -411,7 +440,10 @@
     <xs:element name="termNoteGrp">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="termNote"/>
+                <xs:choice>
+                    <xs:element ref="termNote"/>
+                    <xs:any processContents="skip" namespace="##other"/>
+                </xs:choice>
                 <xs:group ref="entity.noteLinkInfo" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:attributeGroup ref="id"/>
@@ -462,13 +494,17 @@
     <xs:element name="transacGrp">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="transac" minOccurs="1" maxOccurs="1"/>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                    <xs:element ref="transac"/>
+                    <xs:any processContents="skip" namespace="##other"/>
+                </xs:choice>    
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:element ref="date"/>
                     <xs:element ref="note"/>
                     <xs:element ref="ref"/>
                     <xs:element ref="xref"/>
                     <xs:element ref="transacNote"/>
+                    <xs:any processContents="skip" namespace="##other"/>
                 </xs:choice>
             </xs:sequence>
             <xs:attributeGroup ref="id"/>
