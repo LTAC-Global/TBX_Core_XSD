@@ -41,7 +41,7 @@
                 <xs:element ref="descrip"/>
                 <xs:element ref="ref"/>
                 <xs:element ref="xref"/>
-                <xs:any processContents="skip" namespace="##other"/>
+                <xs:any processContents="lax" namespace="##other"/>
             </xs:choice>
         </xs:choice>
     </xs:group>
@@ -54,7 +54,7 @@
                 <xs:element ref="admin"/>
                 <xs:element ref="ref"/>
                 <xs:element ref="xref"/>
-                <xs:any processContents="skip" namespace="##other"/>
+                <xs:any processContents="lax" namespace="##other"/>
             </xs:choice>
         </xs:choice>
     </xs:group>
@@ -86,14 +86,14 @@
             <xs:sequence>
                 <xs:choice minOccurs="1" maxOccurs="1">
                     <xs:element ref="admin"/>
-                    <xs:any processContents="skip" namespace="##other"/>
+                    <xs:any processContents="lax" namespace="##other"/>
                 </xs:choice>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:choice>
                         <xs:element ref="adminNote"/>
                         <xs:element ref="ref"/>
                         <xs:element ref="xref"/>
-                        <xs:any processContents="skip" namespace="##other"/>
+                        <xs:any processContents="lax" namespace="##other"/>
                     </xs:choice>
                     <xs:element ref="note"/>
                 </xs:choice>
@@ -164,7 +164,7 @@
             <xs:sequence>
                 <xs:choice minOccurs="1" maxOccurs="1">
                     <xs:element ref="descrip"/>
-                    <xs:any processContents="skip" namespace="##other"/>
+                    <xs:any processContents="lax" namespace="##other"/>
                 </xs:choice>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:element ref="adminGrp"/>
@@ -175,7 +175,7 @@
                         <xs:element ref="descripNote"/>
                         <xs:element ref="ref"/>
                         <xs:element ref="xref"/>
-                        <xs:any processContents="skip" namespace="##other"/>
+                        <xs:any processContents="lax" namespace="##other"/>
                     </xs:choice>
                 </xs:choice>
             </xs:sequence>
@@ -442,7 +442,7 @@
             <xs:sequence>
                 <xs:choice>
                     <xs:element ref="termNote"/>
-                    <xs:any processContents="skip" namespace="##other"/>
+                    <xs:any processContents="lax" namespace="##other"/>
                 </xs:choice>
                 <xs:group ref="entity.noteLinkInfo" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
@@ -496,7 +496,7 @@
             <xs:sequence>
                 <xs:choice minOccurs="1" maxOccurs="1">
                     <xs:element ref="transac"/>
-                    <xs:any processContents="skip" namespace="##other"/>
+                    <xs:any processContents="lax" namespace="##other"/>
                 </xs:choice>    
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:element ref="date"/>
@@ -504,7 +504,7 @@
                     <xs:element ref="ref"/>
                     <xs:element ref="xref"/>
                     <xs:element ref="transacNote"/>
-                    <xs:any processContents="skip" namespace="##other"/>
+                    <xs:any processContents="lax" namespace="##other"/>
                 </xs:choice>
             </xs:sequence>
             <xs:attributeGroup ref="id"/>
